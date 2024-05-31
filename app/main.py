@@ -1,14 +1,14 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from app.model.model import __version__ as model_version
-from app.model.model import predict_pipeline
+from model.model import __version__ as model_version
+from model.model import predict_pipeline
 import os
 
 app = FastAPI()
 
 
 origins = [
-    "http://localhost:5173",
+    "*"
 ]
 
 app.add_middleware(
