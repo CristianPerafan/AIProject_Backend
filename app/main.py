@@ -1,8 +1,7 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from model.model import __version__ as model_version
-from model.model import predict_pipeline
-from pydub import AudioSegment
+from app.model.model import __version__ as model_version
+from app.model.model import predict_pipeline
 import os
 
 app = FastAPI()
@@ -30,9 +29,10 @@ def home():
 
 @app.post("/predict/")
 def predict(file: UploadFile = File(...)):
-
-
     try:
+
+        os.makedirs('audio', exist_ok=True)
+
         with open(f"audio/{file.filename}", "wb") as f:
             f.write(file.file.read())
 
@@ -41,8 +41,11 @@ def predict(file: UploadFile = File(...)):
         os.remove(f"audio/{file.filename}")
 
         return prediction[0]
-    except:
+    except Exception as e:
+        print(f"An error occurred: {e}")
         return {
-            'message': 'An error occurred'
+            'message': 'An error occurred',
+            'error': str(e)
         }
+
     
